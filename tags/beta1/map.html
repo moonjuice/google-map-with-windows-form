@@ -1,0 +1,55 @@
+<html>
+<head>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript">
+  function initialize() {
+	//利用 location.search 來取得name以及經緯度
+	var property = new Array(3);
+	property = (location.search).split("&");
+	var name = property[0];//姓名
+	var longitude = property[1];//經度
+	var latitude = property[2];//緯度
+	if(latitude==null)
+	    latitude = "23.0058966";
+	else
+		latitude = property[1].slice(9);
+	if(longitude==null)
+	    longitude = "120.1820220";
+	else
+		longitude = property[2].slice(10);
+    var latlng = new google.maps.LatLng(latitude,longitude);//地區編碼
+    var myOptions = {
+      zoom: 15,
+      center: latlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+	//載入地圖
+	var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+    if (name.length!=0) {
+		name = property[0].slice(6)
+	    //資訊視窗字串
+        var contentString = '<div id="content">'+name+'</div>';
+	    //資訊視窗
+	    var infowindow = new google.maps.InfoWindow({
+		    content: contentString
+	    });
+	    //標記點
+	    var marker = new google.maps.Marker({
+		    position: latlng,
+		    map: map,
+		    title:name
+	    });
+	    //資訊視窗與標記綁定點選事件
+	    google.maps.event.addListener(marker, 'click', function() {
+		    infowindow.open(map,marker);
+	    });  
+    }
+  }
+
+</script>
+</head>
+<body onload="initialize()">
+  <div id="map_canvas" style="width:100%; height:100%"></div>
+</body>
+</html>
