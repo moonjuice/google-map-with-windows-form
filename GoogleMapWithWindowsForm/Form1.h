@@ -77,6 +77,7 @@ namespace GoogleMapWithWindowsForm {
 			this->webBrowser->Name = L"webBrowser";
 			this->webBrowser->Size = System::Drawing::Size(760, 505);
 			this->webBrowser->TabIndex = 0;
+			this->webBrowser->Url = (gcnew System::Uri(System::Environment::CurrentDirectory+L"/map.html", System::UriKind::Absolute));
 			// 
 			// nameLabel
 			// 

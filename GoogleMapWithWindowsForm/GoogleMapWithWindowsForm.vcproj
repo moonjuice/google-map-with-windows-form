@@ -204,6 +204,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\map.html"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
