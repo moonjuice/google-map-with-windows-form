@@ -12,10 +12,14 @@
 	var latitude = property[2];//緯度
 	if(latitude==null)
 	    latitude = "23.0058966";
+	else if(latitude.length==9)
+		latitude = "23.0058966";
 	else
 		latitude = property[1].slice(9);
 	if(longitude==null)
 	    longitude = "120.1820220";
+	else if(longitude.length==10)
+		longitude = "120.1820220";
 	else
 		longitude = property[2].slice(10);
     var latlng = new google.maps.LatLng(latitude,longitude);//地區編碼
@@ -26,7 +30,7 @@
     };
 	//載入地圖
 	var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-    if (name.length!=0) {
+    if (name.length!=6 && name.length!=0) {
 		name = property[0].slice(6)
 	    //資訊視窗字串
         var contentString = '<div id="content">'+name+'</div>';
