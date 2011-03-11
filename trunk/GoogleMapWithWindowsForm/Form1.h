@@ -1,6 +1,5 @@
 #pragma once
 
-
 namespace GoogleMapWithWindowsForm {
 
 	using namespace System;
@@ -9,6 +8,9 @@ namespace GoogleMapWithWindowsForm {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::Net;
+	using namespace System::Text;
+	using namespace System::IO;
 
 	/// <summary>
 	/// Form1 的摘要
@@ -77,6 +79,7 @@ namespace GoogleMapWithWindowsForm {
 			this->webBrowser->Name = L"webBrowser";
 			this->webBrowser->Size = System::Drawing::Size(760, 505);
 			this->webBrowser->TabIndex = 0;
+			//System::Environment::CurrentDirectory 為當前的目錄
 			this->webBrowser->Url = (gcnew System::Uri(System::Environment::CurrentDirectory+L"/map.html", System::UriKind::Absolute));
 			// 
 			// nameLabel
@@ -124,6 +127,7 @@ namespace GoogleMapWithWindowsForm {
 			this->sendButton->TabIndex = 5;
 			this->sendButton->Text = L"送出";
 			this->sendButton->UseVisualStyleBackColor = true;
+			this->sendButton->Click += gcnew System::EventHandler(this, &Form1::sendButton_Click);
 			// 
 			// Form1
 			// 
@@ -143,6 +147,30 @@ namespace GoogleMapWithWindowsForm {
 
 		}
 #pragma endregion
-	};
+		//click sendBox
+	private: System::Void sendButton_Click(System::Object^  sender, System::EventArgs^  e) {
+				 String^ longitude;
+				 String^ latitude;
+				 if (!this->addrTextBox->Text->Empty)
+				 {
+					 //解析地址取得經緯度
+					 WebClient^ client = gcnew WebClient;
+					 Stream^ data = client->OpenRead( "http://maps.google.com/maps/geo?q="+this->addrTextBox->Text );
+					 StreamReader^ reader = gcnew StreamReader( data , Encoding::UTF8);
+					 String^ s = reader->ReadToEnd();
+					 s = s->Substring(s->IndexOf("coordinate"));
+					 array<String^>^ coordinate;
+					 coordinate = s->Split(',');
+					 longitude = coordinate[0]->Substring(coordinate[0]->IndexOf("[")+1);
+					 latitude = coordinate[1];
+					 Console::WriteLine( s );
+					 data->Close();
+					 reader->Close();
+				 }
+				 //webBrowser重載
+				 String^ url = "/map.html?name="+this->nameTextBox->Text+"&longitude="+longitude+"&latitude="+latitude;
+				 this->webBrowser->Url = (gcnew System::Uri(System::Environment::CurrentDirectory+url, System::UriKind::Absolute));
+			 }
+};
 }
 
